@@ -1,17 +1,22 @@
-import {initializeApp} from 'firebase/app'
-import {getFirestore} from 'firebase/firestore'
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCX3FfU-QYSO5uJkXjs7a1DYiBpTvjVu3A",
-  authDomain: "reactdemo-d5adb.firebaseapp.com",
-  projectId: "reactdemo-d5adb",
-  storageBucket: "reactdemo-d5adb.firebasestorage.app",
-  messagingSenderId: "669326876153",
-  appId: "1:669326876153:web:7a30069d1e754b4a6c7128"
-}
+  apiKey: "AIzaSyDuLuc9zLBMFF5zv1J6om7Uf6Mu5qdXYjg",
 
-  initializeApp(firebaseConfig);
+  authDomain: "inventory-management-47c67.firebaseapp.com",
 
-  const db = getFirestore();
+  projectId: "inventory-management-47c67",
 
-  export {db}
+  storageBucket: "inventory-management-47c67.firebasestorage.app",
+
+  messagingSenderId: "796231312190",
+
+  appId: "1:796231312190:web:0e109dd709022c1db1026f",
+};
+
+initializeApp(firebaseConfig);
+
+const db = getFirestore();
+
+export { db };
