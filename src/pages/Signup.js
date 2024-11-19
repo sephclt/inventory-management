@@ -1,13 +1,26 @@
 import React, { useState } from "react";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getApp } from "firebase/app";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate(); // Initialize useNavigate
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Signup form submitted!");
-    // Add signup functionality here
+    const db = getFirestore(getApp()); // Initialize Firestore
+    try {
+      await addDoc(collection(db, "users"), {
+        email: email,
+        password: password,
+      });
+      alert("Signup form submitted!");
+      navigate("/login"); // Redirect to Login page
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
   };
 
   return (

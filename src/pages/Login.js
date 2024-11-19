@@ -1,13 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import { db } from "../firebase/config";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const db = getFirestore();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Login form submitted!');
-    // Add login functionality here
+    const q = query(
+      collection(db, "users"),
+      where("email", "==", email),
+      where("password", "==", password)
+    );
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      alert("Login successful!");
+      localStorage.setItem("userEmail", email);
+      navigate("/dashboard");
+    } else {
+      alert("Invalid email or password");
+    }
   };
 
   return (

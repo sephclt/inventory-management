@@ -1,17 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase/config";
 
 export default function InventoryForm() {
-  const [name, setName] = useState('');
-  const [quantity, setQuantity] = useState('');
+  const [name, setName] = useState("");
+  const [quantity, setQuantity] = useState("");
   const [inventory, setInventory] = useState([]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newItem = { name, quantity: parseInt(quantity) };
     setInventory([...inventory, newItem]);
-    setName('');
-    setQuantity('');
-    alert('Item added successfully!');
+    setName("");
+    setQuantity("");
+    alert("Item added successfully!");
+
+    // Add item to Firestore
+    try {
+      const db = getFirestore();
+      await addDoc(collection(db, "items"), newItem);
+      console.log("Document written with ID: ", newItem);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   return (
@@ -36,12 +47,6 @@ export default function InventoryForm() {
       </form>
 
       {/* Display added inventory items */}
-      <h3>Current Inventory</h3>
-      <ul>
-        {inventory.map((item, index) => (
-          <li key={index}>{item.name} - {item.quantity}</li>
-        ))}
-      </ul>
     </div>
   );
 }
