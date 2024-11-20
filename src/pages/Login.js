@@ -1,41 +1,38 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  getFirestore,
-  collection,
-  query,
-  where,
-  getDocs,
-} from "firebase/firestore";
-import { db } from "../firebase/config";
+import { Navigate } from "react-router-dom";
+import { doSignInWithEmailAndPassword } from "../firebase/auth";
+import { useAuth } from "../contexts/authContext";
 
 export default function Login() {
+  const { userLoggedIn } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-  const db = getFirestore();
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const q = query(
-      collection(db, "users"),
-      where("email", "==", email),
-      where("password", "==", password)
-    );
-    const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty) {
-      alert("Login successful!");
-      localStorage.setItem("userEmail", email);
-      navigate("/dashboard");
-    } else {
-      alert("Invalid email or password");
+    if (!isSigningIn) {
+      setIsSigningIn(true);
+      setError("");
+      try {
+        await doSignInWithEmailAndPassword(email, password);
+      } catch (err) {
+        setError(
+          "Failed to sign in. Please check your credentials and try again."
+        );
+        setIsSigningIn(false);
+      }
     }
   };
 
   return (
     <div>
+      {userLoggedIn && <Navigate to={"/dashboard"} replace={true} />}
       <form onSubmit={handleSubmit}>
         <h2>Login</h2>
+        {error && <p style={{ color: "red" }}>{error}</p>}
         <label>Email:</label>
         <input
           type="email"
@@ -50,7 +47,9 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Login</button>
+        <button type="submit" disabled={isSigningIn}>
+          Login
+        </button>
       </form>
     </div>
   );
