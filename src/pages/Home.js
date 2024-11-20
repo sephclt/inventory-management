@@ -4,6 +4,7 @@ import Dashboard from "./Dashboard";
 import Login from "./Login";
 import Signup from "./Signup";
 import InventoryForm from "./InventoryForm";
+import Edit from "./Edit";
 import Feedback from "./Feedback";
 import { useAuth } from "../contexts/authContext";
 import "../App.css";
@@ -11,7 +12,7 @@ import { doSignOut } from "../firebase/auth";
 
 function Home() {
   const navigate = useNavigate();
-  const { userLoggedIn } = useAuth();
+  const { userLoggedIn, currentUser } = useAuth();
 
   return (
     <div className="Home">
@@ -26,9 +27,15 @@ function Home() {
             <NavLink to="/inventory/new" activeClassName="active">
               Add Inventory
             </NavLink>
+            <NavLink to="/edit" activeClassName="active">
+              Edit
+            </NavLink>
             <NavLink to="/feedback" activeClassName="active">
               Feedback
             </NavLink>
+            <div>
+              <strong style={{ color: "white" }}>{currentUser.email}</strong>
+            </div>
             <button
               onClick={() => {
                 doSignOut().then(() => {
@@ -59,6 +66,7 @@ function Home() {
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/edit" element={<Edit />} />
         </Routes>
       </main>
     </div>
