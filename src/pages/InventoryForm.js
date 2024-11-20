@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
+import { useAuth } from "../contexts/authContext";
 
 export default function InventoryForm() {
+  const { userLoggedIn } = useAuth();
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [inventory, setInventory] = useState([]);
@@ -27,6 +29,7 @@ export default function InventoryForm() {
 
   return (
     <div>
+      {!userLoggedIn && <h2>Please login to add inventory items</h2>}
       <form onSubmit={handleSubmit}>
         <h2>Add Inventory Item</h2>
         <label>Name:</label>

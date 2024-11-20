@@ -7,11 +7,16 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase/config";
+import { useAuth } from "../contexts/authContext";
 
 export default function Edit() {
+  const { userLoggedIn } = useAuth();
   const [inventory, setInventory] = useState([]);
 
   useEffect(() => {
+    if (!userLoggedIn) {
+      return;
+    }
     const fetchInventory = async () => {
       const db = getFirestore();
       const itemsCollection = collection(db, "items");
@@ -55,33 +60,39 @@ export default function Edit() {
 
   return (
     <div>
-      <h2>Inventory Dashboard</h2>
-      <ul>
-        {inventory.map((item) => (
-          <li
-            key={item.id}
-            style={{ display: "flex", justifyContent: "space-between" }}
-          >
-            <span>
-              {item.name} - {item.quantity}
-            </span>
-            <span>
-              <button
-                style={{ marginLeft: "5px" }}
-                onClick={() => handleDecrement(item.id)}
+      {!userLoggedIn ? (
+        <h2>Please login to view the dashboard</h2>
+      ) : (
+        <>
+          <h2>Inventory Dashboard</h2>
+          <ul>
+            {inventory.map((item) => (
+              <li
+                key={item.id}
+                style={{ display: "flex", justifyContent: "space-between" }}
               >
-                -
-              </button>
-              <button
-                style={{ marginLeft: "10px" }}
-                onClick={() => handleIncrement(item.id)}
-              >
-                +
-              </button>
-            </span>
-          </li>
-        ))}
-      </ul>
+                <span>
+                  {item.name} - {item.quantity}
+                </span>
+                <span>
+                  <button
+                    style={{ marginLeft: "5px" }}
+                    onClick={() => handleDecrement(item.id)}
+                  >
+                    -
+                  </button>
+                  <button
+                    style={{ marginLeft: "10px" }}
+                    onClick={() => handleIncrement(item.id)}
+                  >
+                    +
+                  </button>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </div>
   );
 }
