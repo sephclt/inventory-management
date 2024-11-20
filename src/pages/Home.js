@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route, NavLink, useNavigate } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Login from "./Login";
+import Signup from "./Signup";
 import InventoryForm from "./InventoryForm";
 import Feedback from "./Feedback";
 import { useAuth } from "../contexts/authContext";
@@ -39,9 +40,14 @@ function Home() {
             </button>
           </>
         ) : (
-          <NavLink to="/login" activeClassName="active">
-            Login
-          </NavLink>
+          <>
+            <NavLink to="/login" activeClassName="active">
+              Login
+            </NavLink>
+            <NavLink to="/signup" activeClassName="active">
+              Sign Up
+            </NavLink>
+          </>
         )}
       </nav>
 
@@ -52,6 +58,7 @@ function Home() {
           <Route path="/inventory/new" element={<InventoryForm />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </main>
     </div>
