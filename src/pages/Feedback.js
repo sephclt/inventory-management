@@ -25,12 +25,20 @@ export default function Feedback() {
       {!userLoggedIn ? (
         <h2>Please login to submit feedback</h2>
       ) : (
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
           <h2>Feedback</h2>
           <textarea
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
             required
+            style={{ width: "80%", marginBottom: "10px" }}
           ></textarea>
           <button type="submit">Submit Feedback</button>
         </form>
