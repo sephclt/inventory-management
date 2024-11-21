@@ -67,6 +67,23 @@ export default function Edit() {
     );
   };
 
+  const handleEdit = async (id, newName, newQuantity) => {
+    if (window.confirm("Are you sure you want to save changes?")) {
+      const itemRef = doc(db, "items", id);
+      await updateDoc(itemRef, {
+        name: newName,
+        quantity: newQuantity,
+      });
+      setInventory((prevInventory) =>
+        prevInventory.map((item) =>
+          item.id === id
+            ? { ...item, name: newName, quantity: newQuantity }
+            : item
+        )
+      );
+    }
+  };
+
   return (
     <div>
       {!userLoggedIn ? (
@@ -81,7 +98,32 @@ export default function Edit() {
                 style={{ display: "flex", justifyContent: "space-between" }}
               >
                 <span>
-                  {item.name} - {item.quantity}
+                  <input
+                    type="text"
+                    value={item.name}
+                    onChange={(e) =>
+                      setInventory((prevInventory) =>
+                        prevInventory.map((invItem) =>
+                          invItem.id === item.id
+                            ? { ...invItem, name: e.target.value }
+                            : invItem
+                        )
+                      )
+                    }
+                  />
+                  <input
+                    type="number"
+                    value={item.quantity}
+                    onChange={(e) =>
+                      setInventory((prevInventory) =>
+                        prevInventory.map((invItem) =>
+                          invItem.id === item.id
+                            ? { ...invItem, quantity: parseInt(e.target.value) }
+                            : invItem
+                        )
+                      )
+                    }
+                  />
                 </span>
                 <span>
                   <button
@@ -106,6 +148,14 @@ export default function Edit() {
                     onClick={() => handleDelete(item.id)}
                   >
                     Delete
+                  </button>
+                  <button
+                    style={{ marginLeft: "10px" }}
+                    onClick={() =>
+                      handleEdit(item.id, item.name, item.quantity)
+                    }
+                  >
+                    Save
                   </button>
                 </span>
               </li>
