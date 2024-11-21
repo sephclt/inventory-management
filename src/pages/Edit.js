@@ -5,6 +5,7 @@ import {
   getDocs,
   doc,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { useAuth } from "../contexts/authContext";
@@ -58,6 +59,14 @@ export default function Edit() {
     }
   };
 
+  const handleDelete = async (id) => {
+    const itemRef = doc(db, "items", id);
+    await deleteDoc(itemRef);
+    setInventory((prevInventory) =>
+      prevInventory.filter((item) => item.id !== id)
+    );
+  };
+
   return (
     <div>
       {!userLoggedIn ? (
@@ -78,6 +87,7 @@ export default function Edit() {
                   <button
                     style={{ marginLeft: "5px" }}
                     onClick={() => handleDecrement(item.id)}
+                    disabled={item.quantity === 0}
                   >
                     -
                   </button>
@@ -86,6 +96,16 @@ export default function Edit() {
                     onClick={() => handleIncrement(item.id)}
                   >
                     +
+                  </button>
+                  <button
+                    style={{
+                      marginLeft: "10px",
+                      color: "white",
+                      backgroundColor: "red",
+                    }}
+                    onClick={() => handleDelete(item.id)}
+                  >
+                    Delete
                   </button>
                 </span>
               </li>
