@@ -35,7 +35,7 @@ export default function Dashboard() {
           <ul>
             {inventory.map((item) => (
               <li key={item.id}>
-                {item.name} - {item.quantity}
+                <strong>{item.name}</strong> - {item.quantity}
               </li>
             ))}
           </ul>
